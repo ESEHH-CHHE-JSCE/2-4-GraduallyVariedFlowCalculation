@@ -1,4 +1,4 @@
-"""【例題2.4】 漸変不等流の一次元解析法"""
+"""【例題2.4】 漸変不等流の一次元解析法."""
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # 以下プログラム
@@ -16,13 +16,14 @@ SHEET2_NAME = "水路形状"  # 入力データのシート名
 
 
 class SetData:
-    """入力条件や定数を設定するクラス"""
+    """入力条件や定数を設定するクラス."""
+
     def __init__(self, _inputFileName):
-        """ファイルの読み込みと変数の設定"""
+        """ファイルの読み込みと変数の設定."""
         self.data = pd.read_excel(_inputFileName, sheet_name=None)
 
-    # 数値の取得
     def setValue(self):
+        """数値の取得."""
         # 各データをnumpy形式に変換
         # 計算条件の読み込み
         print(self.data[SHEET1_NAME])
@@ -58,7 +59,7 @@ class SetData:
         __Qh = self.Q
         __f = (_Ib-(__nh2*__Qh**2.)/(__Rh**(4./3.)*__Ah**2.) +
                __Qh**2./(GRAVITY_ACCELERATION*__Ah**3.)*h*_dB)
-        return(np.abs(__f))
+        return (np.abs(__f))
 
     # 擬似等流水深を求めるための繰り返し計算
     def __calc_x0h0(self, _i, _Ib, _dB, _x0, _h0, _wl0):
@@ -71,7 +72,7 @@ class SetData:
         _x0.append(__x)
         _h0.append(__h)
         _wl0.append(__wl)
-        return(_x0, _h0, _wl0)
+        return (_x0, _h0, _wl0)
 
     # 擬似等流水深を求める関数
     def __calc_h0(self, _len):
@@ -83,8 +84,9 @@ class SetData:
                                                __x0, __h0, __wl0)
         # i = 1~N-1
         for __gridNo in range(1, _len-1):
-            if(np.abs(self.dBdx[__gridNo-1]-self.dBdx[__gridNo]) <= EPS and
-               np.abs(self.Ib[__gridNo-1] - self.Ib[__gridNo]) <= EPS):
+            if (np.abs(self.dBdx[__gridNo-1]-self.dBdx[__gridNo]) <= EPS
+                    and np.abs(self.Ib[__gridNo-1]-self.Ib[__gridNo]) <= EPS):
+
                 __Ib = (self.Ib[__gridNo-1]+self.Ib[__gridNo])/2.
                 __dB = (self.dBdx[__gridNo-1]+self.dBdx[__gridNo])/2.
                 (__x0, __h0, __wl0) = self.__calc_x0h0(__gridNo, __Ib, __dB,
@@ -102,26 +104,27 @@ class SetData:
         (__x0, __h0, __wl0) = self.__calc_x0h0(_len-1, self.Ib[_len-2],
                                                self.dBdx[_len-2],
                                                __x0, __h0, __wl0)
-        return(np.array(__x0), np.array(__h0), np.array(__wl0))
+        return (np.array(__x0), np.array(__h0), np.array(__wl0))
 
     # 限界水深
     def __calc_hc(self):
-        return((self.Q**2./(GRAVITY_ACCELERATION*self.B**2.))**(1./3.))
+        return ((self.Q**2./(GRAVITY_ACCELERATION*self.B**2.))**(1./3.))
 
     # 水路床勾配の計算
     def __calc_dadx(self, _theta):
         __dadx = (_theta[1:] - _theta[:-1])/self.dx
-        return(__dadx)
+        return (__dadx)
 
     # データの取得関数
     def __getChannelData(self, dataName):
-        return(np.array(self.data[SHEET2_NAME][dataName]))
+        return (np.array(self.data[SHEET2_NAME][dataName]))
 
 
 class StepMethod(SetData):
-    """標準逐次計算法のクラス"""
+    """標準逐次計算法のクラス."""
+
     def __init__(self, _fileName):
-        # 変数等の設定
+        """変数等の設定."""
         super().__init__(_fileName)
         super().setValue()
 
@@ -131,7 +134,7 @@ class StepMethod(SetData):
         A = h*_B
         s = _B+2.*h
         R = A/s
-        return(h, A, R)
+        return (h, A, R)
 
     # H1の算出
     def __calcTmpH(self, _H1, _H2, _zb1, _zb2, _B1, _B2, _dx):
@@ -140,10 +143,10 @@ class StepMethod(SetData):
         tmp = (_H2+self.Q**2./2./GRAVITY_ACCELERATION*(1./A2**2.-1./A1**2.) +
                _dx/2.*self.n**2.*self.Q**2.*(1./(R2**(4./3.)*A2**2.) +
                                              1./(R1**(4./3.)*A1**2.)))
-        return(tmp)
+        return (tmp)
 
-    # 収束計算
     def calcWL(self):
+        """収束計算."""
         H = np.zeros(len(self.x))
         H[-1] = self.Wldown
         for i in range(len(H)-2, -1, -1):
@@ -151,18 +154,18 @@ class StepMethod(SetData):
             _tmpH = self.__calcTmpH(H[i+1]-self.zb[i+1]+self.zb[i], H[i+1],
                                     self.zb[i], self.zb[i+1],
                                     self.B[i], self.B[i+1], self.dx[i])
-            while(1):
+            while (1):
                 _tmpH0 = _tmpH
                 _tmpH = self.__calcTmpH(_tmpH, H[i+1],
                                         self.zb[i], self.zb[i+1],
                                         self.B[i], self.B[i+1], self.dx[i])
-                if(np.abs(_tmpH-_tmpH0) <= EPS):
+                if (np.abs(_tmpH-_tmpH0) <= EPS):
                     break
             H[i] = _tmpH
         self.H = H
 
-    # 解析結果の書き出し
     def writeData(self, _fileName):
+        """解析結果の書き出し."""
         _outFile = _fileName+".xlsx"
         print(_outFile)
         df = pd.DataFrame()
@@ -177,9 +180,10 @@ class StepMethod(SetData):
 
 
 class DirectStepMethod(SetData):
-    """直接逐次計算法"""
+    """直接逐次計算法."""
+
     def __init__(self, _fileName):
-        # 変数等の設定
+        """変数等の設定."""
         super().__init__(_fileName)
         super().setValue()
 
@@ -189,7 +193,7 @@ class DirectStepMethod(SetData):
         A = h*_B
         s = _B+2.*h
         R = A/s
-        return(h, A, R)
+        return (h, A, R)
 
     # |dxcalc-dx|の算出
     def __calcTmpH(self, _H1, _H2, _zb1, _zb2, _B1, _B2, _dx):
@@ -199,10 +203,10 @@ class DirectStepMethod(SetData):
                  (_H2+self.Q**2./2./GRAVITY_ACCELERATION/A2**2.)
                  ) / (self.n**2.*self.Q**2.*(1./(R2**(4./3.)*A2**2.) +
                       1./(R1**(4./3.)*A1**2.))/2.0)
-        return(np.abs(__tmp-_dx))
+        return (np.abs(__tmp-_dx))
 
-    # 収束計算
     def calcWL(self):
+        """収束計算."""
         H = np.zeros(len(self.x))
         H[-1] = self.Wldown
         for i in range(len(H)-2, -1, -1):
@@ -217,8 +221,8 @@ class DirectStepMethod(SetData):
             H[i] = _tmpH
         self.H = H
 
-    # 解析結果の書き出し
     def writeData(self, _fileName):
+        """解析結果の書き出し."""
         _outFile = _fileName+".xlsx"
         print(_outFile)
         df = pd.DataFrame()
@@ -233,9 +237,10 @@ class DirectStepMethod(SetData):
 
 
 class RungeKuttaGill(SetData):
-    """Runge-Kutta-Gill（ルンゲ-クッタ-ギル法）"""
+    """Runge-Kutta-Gill（ルンゲ-クッタ-ギル法）."""
+
     def __init__(self, _fileName):
-        # 変数等の設定
+        """変数等の設定."""
         super().__init__(_fileName)
         super().setValue()
 
@@ -245,7 +250,7 @@ class RungeKuttaGill(SetData):
         A = h*_B
         s = _B+2.*h
         R = A/s
-        return(h, A, R)
+        return (h, A, R)
 
     # |dxcalc-dx|の算出
     def __calcTmpH(self, _h, _B, _Ib, _dBdx):
@@ -254,10 +259,10 @@ class RungeKuttaGill(SetData):
                  self.Q**2./(GRAVITY_ACCELERATION*A**3.)*h*_dBdx)
         __bottom = 1.0-self.Q**2.0/(GRAVITY_ACCELERATION*A**3.)*_B
 
-        return(__top/__bottom)
+        return (__top/__bottom)
 
-    # 計算
     def calcWL(self):
+        """計算手順."""
         __h = np.zeros(len(self.x))
         __h[-1] = self.Wldown-self.zb[-1]  # 下流端水深
         __dx = -self.dx
@@ -280,8 +285,8 @@ class RungeKuttaGill(SetData):
                                  2.*__coef[3]*__k3+__k4)/6.*__dx[i]
         self.H = __h + self.zb
 
-    # 解析結果の書き出し
     def writeData(self, _fileName):
+        """解析結果の書き出し."""
         _outFile = _fileName+".xlsx"
         print(_outFile)
         df = pd.DataFrame()
@@ -296,14 +301,16 @@ class RungeKuttaGill(SetData):
 
 
 class Graph:
-    """グラフを作成するクラス"""
+    """グラフを作成するクラス."""
+
     def __init__(self, _outputFileName, _data):
+        """初期設定."""
         __fileName, __ = os.path.splitext(os.path.basename(_outputFileName))
         self.graphFileName = __fileName+"_output.pdf"
         self.data = _data
 
     def graphPlot(self):
-        # グラフの書式設定
+        """グラフの書式設定."""
         plt.rcParams["font.size"] = 12
         __xLim = [np.min(self.data.x), np.max(self.data.x)+1.5]
         fig = plt.figure(figsize=(8, 6), tight_layout=True)
