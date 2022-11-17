@@ -19,7 +19,6 @@
   - scipy
   - openpyxl
   - xlrd
-です．
 
 [pipやconda](https://www.python.jp/install/anaconda/pip_and_conda.html)でインストールしてください．
 
