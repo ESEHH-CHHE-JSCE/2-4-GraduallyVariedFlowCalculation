@@ -5,8 +5,8 @@
 import pandas as pd
 import numpy as np
 import os
-import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gsc
 import scipy.optimize
 # 定数の設定
 GRAVITY_ACCELERATION: float = 9.81  # 重力加速度
@@ -314,8 +314,7 @@ class Graph:
         plt.rcParams["font.size"] = 12
         __xLim = [np.min(self.data.x), np.max(self.data.x)+1.5]
         fig = plt.figure(figsize=(8, 6), tight_layout=True)
-        spec = matplotlib.gridspec.GridSpec(ncols=1, nrows=4,
-                                            height_ratios=[4, 2, 2, 4])
+        spec = gsc.GridSpec(ncols=1, nrows=4, height_ratios=[4, 2, 2, 4])
         # 水路平面形状の縦断変化
         ax1 = fig.add_subplot(spec[0])
         ax1.set_title(self.graphFileName)
@@ -325,7 +324,7 @@ class Graph:
         ax1.plot([self.data.x[0], self.data.x[-1]], [0.0, 0.0],
                  ls='-.', color='black')
         ax1.set_ylabel("$B$ (m)")
-        ax1.set_xlim(__xLim)
+        ax1.set_xlim(__xLim[0], __xLim[-1])
         ax1.grid()
         # 流量の縦断変化
         ax2 = fig.add_subplot(spec[1])
@@ -333,7 +332,7 @@ class Graph:
         ax2.plot([self.data.x[0], self.data.x[-1]], [self.data.Q, self.data.Q],
                  color='black')
         ax2.set_ylabel("$Q$ (m$^{3}$/s)")
-        ax2.set_xlim(__xLim)
+        ax2.set_xlim(__xLim[0], __xLim[-1])
         ax2.grid()
         # 粗度係数の縦断変化
         ax3 = fig.add_subplot(spec[2])
@@ -341,7 +340,7 @@ class Graph:
         ax3.plot([self.data.x[0], self.data.x[-1]], [self.data.n, self.data.n],
                  color='black')
         ax3.set_ylabel("$n$ (m$^{-1/3} \cdot$ s)")
-        ax3.set_xlim(__xLim)
+        ax3.set_xlim(__xLim[0], __xLim[-1])
         ax3.grid()
         # 水面形
         ax4 = fig.add_subplot(spec[3])
@@ -353,7 +352,7 @@ class Graph:
         ax4.plot(self.data.x, self.data.H, ls='-', color='gray', label="$H$")
         ax4.plot(self.data.x[-1], self.data.H[-1], 's', color='black')
         ax4.set_ylabel("$H$, $z_b$ (m)")
-        ax4.set_xlim(__xLim)
+        ax4.set_xlim(__xLim[0], __xLim[-1])
         ax4.set_xticks([0, 50, 100, 150, 200, 250, 300, 350, 400])
         ax4.set_xticklabels(["0\n8", "50\n7", "100\n6", "150\n5", "200\n4",
                             "250\n3", "300\n2", "350\n1", "400\n0"])

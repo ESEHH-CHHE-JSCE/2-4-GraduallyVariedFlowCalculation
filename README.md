@@ -6,3 +6,21 @@
   - 計算条件の設定は，”計算条件”シートで実施．
   - 水路形状の設定は，”水路形状”シートで実施．
 
+- 計算は，以下のコマンドで実行できます．
+
+   ~~~ sh
+    python 2_4Prog.py
+    ~~~
+
+- 計算の実行には，以下のライブラリが必要です．
+  - pandas
+  - numpy
+  - matplotlib
+  - scipy
+  - openpyxl
+  - xlrd
+です．
+[pipやconda](https://www.python.jp/install/anaconda/pip_and_conda.html)でインストールしてください．
+
+- *.ipynbのファイルは，[jupyter notebook](https://jupyter.org)で実行可能です．
+[pipやconda](https://www.python.jp/install/anaconda/pip_and_conda.html)でインストール可能です．また，[VSCode](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)からも使用できます．
