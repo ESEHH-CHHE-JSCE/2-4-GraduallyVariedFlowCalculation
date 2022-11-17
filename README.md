@@ -20,6 +20,7 @@
   - openpyxl
   - xlrd
 です．
+
 [pipやconda](https://www.python.jp/install/anaconda/pip_and_conda.html)でインストールしてください．
 
 - *.ipynbのファイルは，[jupyter notebook](https://jupyter.org)で実行可能です．
