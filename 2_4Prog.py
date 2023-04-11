@@ -348,7 +348,7 @@ class Graph:
         ax4.plot(self.data.x, self.data.hc+self.data.zb, ls='--',
                  color='black', label="$h_c$")
         ax4.plot(self.data.x0, self.data.wl0, ls='-.', color='black',
-                 label="$h_0^{\prime}$")
+                 label="$h_0$")
         ax4.plot(self.data.x, self.data.H, ls='-', color='gray', label="$H$")
         ax4.plot(self.data.x[-1], self.data.H[-1], 's', color='black')
         ax4.set_ylabel("$H$, $z_b$ (m)")
