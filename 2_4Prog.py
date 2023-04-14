@@ -10,7 +10,7 @@ import matplotlib.gridspec as gsc
 import scipy.optimize
 # 定数の設定
 GRAVITY_ACCELERATION: float = 9.81  # 重力加速度
-EPS: float = 1e-15  # 差の閾値
+EPS: float = 1e-4  # 差の閾値
 SHEET1_NAME = "計算条件"  # 入力データのシート名
 SHEET2_NAME = "水路形状"  # 入力データのシート名
 
@@ -354,8 +354,8 @@ class Graph:
         ax4.set_ylabel("$H$, $z_b$ (m)")
         ax4.set_xlim(__xLim[0], __xLim[-1])
         ax4.set_xticks([0, 50, 100, 150, 200, 250, 300, 350, 400])
-        ax4.set_xticklabels(["0\n8", "50\n7", "100\n6", "150\n5", "200\n4",
-                            "250\n3", "300\n2", "350\n1", "400\n0"])
+        ax4.set_xticklabels(["0\n9", "50\n8", "100\n7", "150\n6", "200\n5",
+                            "250\n4", "300\n3", "350\n2", "400\n1"])
         ax4.set_xlabel('upper:$x$ (m), lower:Section No.')
         ax4.grid()
         ax4.legend(borderpad=0.2, labelspacing=0.1,
