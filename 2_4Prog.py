@@ -252,7 +252,7 @@ class RungeKuttaGill(SetData):
         R = A/s
         return (h, A, R)
 
-    # |dxcalc-dx|の算出
+    # dh/dxの算出
     def __calcTmpH(self, _h, _B, _Ib, _dBdx):
         (h, A, R) = self.__calcParam(_h, 0.0, _B)
         __top = (_Ib-self.n**2.*self.Q**2./(R**(4./3.)*A**2.) +
